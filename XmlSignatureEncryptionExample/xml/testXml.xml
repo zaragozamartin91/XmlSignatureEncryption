@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+	<soap:Header />
+	<soap:Body>
+		<ns2:getLiquidaciones xmlns:ns2="http://erad.visa.com/">
+			<fechaDesde>01/01/2014</fechaDesde>
+			<fechaHasta>31/12/2015</fechaHasta>
+			<numeroCuenta>0122082306</numeroCuenta>
+			<plataforma>CRE-PPL</plataforma>
+		</ns2:getLiquidaciones>
+	</soap:Body>
+</soap:Envelope>
