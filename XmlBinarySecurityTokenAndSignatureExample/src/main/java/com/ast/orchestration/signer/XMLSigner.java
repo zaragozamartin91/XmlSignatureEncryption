@@ -71,7 +71,7 @@ public class XMLSigner {
 	private static final String ID_ELEMENT_TO = "_1";
 	private static final String ID_ELEMENT_TIMESTAMP = "_0";
 	
-	@SuppressWarnings("static-access")
+	@SuppressWarnings({ "static-access", "restriction" })
 	public String sign(String request, SecurityData securityData) throws Exception {
 
 		
@@ -128,13 +128,15 @@ public class XMLSigner {
 		QName to = soapEnvelope.createQName("To", WS_ADDRESSING_PREFIX);
 		SOAPHeaderElement toElement = soapHeader.addHeaderElement(to);
 		toElement.addTextNode(securityData.getHeaderTo());
-		toElement.addAttribute(soapEnvelope.createName("mustUnderstand", SOAP_ENVELOPE_PREFIX, WS_SECURITY_UTILITY_NAMESPACE), MUSTUNDERSTAND_VALUE);
+//		toElement.addAttribute(soapEnvelope.createName("mustUnderstand", SOAP_ENVELOPE_PREFIX, WS_SECURITY_UTILITY_NAMESPACE), MUSTUNDERSTAND_VALUE);
+		toElement.addAttribute(soapEnvelope.createName("mustUnderstand", SOAP_ENVELOPE_PREFIX, SOAP_ENVELOPE_NAMESPACE), MUSTUNDERSTAND_VALUE);
 		toElement.addAttribute(soapEnvelope.createName("Id", WS_SECURITY_UTILITY_PREFIX, WS_SECURITY_UTILITY_NAMESPACE), ID_ELEMENT_TO);
 
 		// SECURITY
 		QName security = soapEnvelope.createQName("Security", WS_SECURITY_PREFIX);
 		SOAPHeaderElement securityElement = soapHeader.addHeaderElement(security);
-		securityElement.addAttribute(soapEnvelope.createName("mustUnderstand", SOAP_ENVELOPE_PREFIX, WS_SECURITY_UTILITY_NAMESPACE), MUSTUNDERSTAND_VALUE);
+//		securityElement.addAttribute(soapEnvelope.createName("mustUnderstand", SOAP_ENVELOPE_PREFIX, WS_SECURITY_UTILITY_NAMESPACE), MUSTUNDERSTAND_VALUE);
+		securityElement.addAttribute(soapEnvelope.createName("mustUnderstand", SOAP_ENVELOPE_PREFIX, SOAP_ENVELOPE_NAMESPACE), MUSTUNDERSTAND_VALUE);
 
 		
 		// SECURITY-TIMESTAMP
@@ -208,6 +210,7 @@ public class XMLSigner {
 		return strResult;
 	}
 
+	@SuppressWarnings("restriction")
 	private String soapPartToString(SOAPPart soapPart) throws SOAPException, TransformerFactoryConfigurationError,
 			TransformerConfigurationException, TransformerException {
 		Source source = soapPart.getContent();
@@ -232,8 +235,9 @@ public class XMLSigner {
 	
 	/** Retorna un objeto Element correspondiente al BinarySecurityToken **/
 	
+	@SuppressWarnings("restriction")
 	private SOAPElement getBinarySecurityToken(SecurityData securityData, SOAPEnvelope soapEnvelope, 
-					SOAPHeaderElement securityElement,String binaryTokenId, KeyStore keyStore) throws Exception {
+					 SOAPHeaderElement securityElement,String binaryTokenId, KeyStore keyStore) throws Exception {
 		QName binarySecurityToken = soapEnvelope.createQName("BinarySecurityToken", WS_SECURITY_PREFIX);
 		SOAPElement binarySecurityTokenElement = securityElement.addChildElement(binarySecurityToken);
 		
@@ -248,6 +252,7 @@ public class XMLSigner {
 	/** Retorna un objeto SignedInfo con los elementos TImestamp y To firmados mendiante
   	Signature Algorithm, Signature Canonicalization y Digest Algorithm **/
 
+	@SuppressWarnings("restriction")
 	private SignedInfo getSignedInfo(XMLSignatureFactory signFactory) throws Exception { 
 		TransformParameterSpec transformSpec = null;
 		List<Transform> transforms = new LinkedList<Transform>();
@@ -268,12 +273,14 @@ public class XMLSigner {
 	
 	/** Agrega un objeto Element correspondiente al Key Info **/
 	
+	@SuppressWarnings("restriction")
 	private void addKeyInfoBST(SOAPEnvelope soapEnvelope, SOAPHeader soapHeader, String binaryTokenId) throws Exception {
 		addKeyInfoBST(soapEnvelope,soapHeader,binaryTokenId,null);
 	}
 	
 	/** Agrega un objeto Element correspondiente al Key Info **/
 	
+	@SuppressWarnings("restriction")
 	private void addKeyInfoBST(SOAPEnvelope soapEnvelope, SOAPHeader soapHeader, String binaryTokenId, X509Certificate certificate) throws Exception {
 		Node node = getSignatureValue(soapHeader);
 		SOAPElement signatureElement = (SOAPElement) node;

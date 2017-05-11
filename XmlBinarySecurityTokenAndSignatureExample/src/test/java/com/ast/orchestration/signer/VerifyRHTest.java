@@ -7,10 +7,8 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.security.KeyManagementException;
-import java.security.KeyStore;
 import java.security.NoSuchAlgorithmException;
 import java.security.Security;
-import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.util.Properties;
@@ -34,19 +32,14 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
 import org.apache.ws.security.WSSecurityException;
-import org.apache.ws.security.components.crypto.Crypto;
-import org.apache.ws.security.components.crypto.CryptoFactory;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.w3c.dom.Document;
 
-import com.ast.orchestration.aes.DecryptEncryptException;
-import com.ast.orchestration.aes.EncryptionUtils;
 import com.ast.orchestration.util.Constant;
 
-public class XMLSignerAndSenderTest {
-	static SecurityData securityData;
-	static Crypto crypto;
+public class VerifyRHTest {
+	private static SecurityData securityData;
 
 	@BeforeClass
 	public static void beforeClass() throws IOException, WSSecurityException {
@@ -64,7 +57,6 @@ public class XMLSignerAndSenderTest {
 				sigbabanelcoProperties.getProperty(Constant.ORCHESTRATION_HEADER_TIMESTAMP_EXPIRATION),
 				sigbabanelcoProperties.getProperty(Constant.ORCHESTRATION_HEADER_KEY_INFO));
 
-		crypto = CryptoFactory.getInstance("crypto.properties");
 	}
 
 	@Test
@@ -173,39 +165,5 @@ public class XMLSignerAndSenderTest {
 		SchemeRegistry sr = ccm.getSchemeRegistry();
 		sr.register(new Scheme("https", ssf, 443));
 
-	}
-
-	@Test
-	public void decryptKeys() throws DecryptEncryptException {
-		System.out.printf("Storepass de %s es: %s%n", "SRVSBAWB01-PROD2.jks",
-				EncryptionUtils.desencriptadorAES("00f00e462d997f905a1da5266438eba4"));
-		System.out.printf("Keypass de %s::%s es: %s%n", "SRVSBAWB01-PROD2.jks", "srvsbawb01-prod",
-				EncryptionUtils.desencriptadorAES("1930ea1a50e29506ea9cdc204e228fd5"));
-		System.out.printf("Storepass de %s es: %s%n", "macro02-test.jks",
-				EncryptionUtils.desencriptadorAES("27cf4c44eab0c8a33466ae8b7dcd04f0"));
-		System.out.printf("Keypass de %s::%s es: %s%n", "macro02-test.jks", "macro-test",
-				EncryptionUtils.desencriptadorAES("27cf4c44eab0c8a33466ae8b7dcd04f0"));
-
-	}
-
-	@Test
-	public void encryptKeys() throws DecryptEncryptException {
-		System.out.println("clave password encirptada:" + EncryptionUtils.encriptadorAES("password"));
-	}
-
-	@Test
-	public void decode() throws Exception {
-		KeyStore keyStore = getKeystore();
-		Certificate certificate = keyStore.getCertificate(securityData.getAlias());
-		System.out.printf("Certificado %s::%s es: %s%n%n", securityData.getKeystorefilePath(), securityData.getAlias(),
-				certificate.toString());
-	}
-
-	private KeyStore getKeystore() throws Exception {
-		FileInputStream input = new FileInputStream(securityData.getKeystorefilePath());
-		KeyStore keyStore = KeyStore.getInstance(securityData.getKeystoreType());
-		keyStore.load(input, EncryptionUtils.desencriptadorAES(securityData.getKeystorePass()).toCharArray());
-		input.close();
-		return keyStore;
 	}
 }
