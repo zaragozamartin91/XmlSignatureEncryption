@@ -2,8 +2,6 @@ package com.ast.orchestration.signer;
 
 import static org.junit.Assert.assertTrue;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.security.KeyManagementException;
@@ -43,20 +41,17 @@ public class VerifyRHTest {
 
 	@BeforeClass
 	public static void beforeClass() throws IOException, WSSecurityException {
-		File sigbabanelcoPropertiesFile = new File("src/test/resources/sigbabanelco.properties");
 		Properties sigbabanelcoProperties = new Properties();
-		sigbabanelcoProperties.load(new FileInputStream(sigbabanelcoPropertiesFile));
+		sigbabanelcoProperties.load(AcceptedBenefitsQueryRHTest.class.getClassLoader().getResourceAsStream("sigbabanelco.properties"));
 
 		securityData = new SecurityData("JKS", sigbabanelcoProperties.getProperty(Constant.ORCHESTRATION_JKS_PATH),
-				sigbabanelcoProperties.getProperty(Constant.ORCHESTRATION_JKS_PASS),
-				sigbabanelcoProperties.getProperty(Constant.ORCHESTRATION_ALIAS),
-				sigbabanelcoProperties.getProperty(Constant.ORCHESTRATION_ALIAS_PASS),
-				"https://wssba.prismamp.com/INetworkService/Verify",
-				sigbabanelcoProperties.getProperty(Constant.ORCHESTRATION_HEADER_ADDRESS),
-				sigbabanelcoProperties.getProperty(Constant.ORCHESTRATION_HEADER_TO),
+				sigbabanelcoProperties.getProperty(Constant.ORCHESTRATION_JKS_PASS), sigbabanelcoProperties.getProperty(Constant.ORCHESTRATION_ALIAS),
+				sigbabanelcoProperties.getProperty(Constant.ORCHESTRATION_ALIAS_PASS), "https://wssba.prismamp.com/INetworkService/Verify",
+				sigbabanelcoProperties.getProperty(Constant.ORCHESTRATION_HEADER_ADDRESS), sigbabanelcoProperties.getProperty(Constant.ORCHESTRATION_HEADER_TO),
 				sigbabanelcoProperties.getProperty(Constant.ORCHESTRATION_HEADER_TIMESTAMP_EXPIRATION),
 				sigbabanelcoProperties.getProperty(Constant.ORCHESTRATION_HEADER_KEY_INFO));
 
+		System.out.println("Security: " + securityData);
 	}
 
 	@Test
@@ -77,7 +72,7 @@ public class VerifyRHTest {
 		// String password = "changeme";
 		// String encUser = "prismakey";
 
-		String endpointWS = "https://wssba.prismamp.com/NetworkService/Service.svc?wsdl";
+		String endpointWS = "https://200.59.131.174/NetworkService/Service.svc?wsdl";
 
 		DefaultHttpClient httpClient = new DefaultHttpClient();
 		HttpResponse httpresponse = null;
@@ -94,7 +89,6 @@ public class VerifyRHTest {
 
 		Document doc = DocumentUtils.createDocument(signedRequest);
 
-		System.out.println();
 		System.out.println("Sending: " + DocumentUtils.documentToString(doc));
 
 		entity = new StringEntity(DocumentUtils.documentToString(doc), "utf-8");
@@ -105,13 +99,12 @@ public class VerifyRHTest {
 		post.setHeader("Content-Type", "application/soap+xml;charset=UTF-8;");
 
 		httpresponse = httpClient.execute(post);
+		System.out.println("httpresponse: " + httpresponse);
 		resEntity = httpresponse.getEntity();
 		String stringXmlResponse = EntityUtils.toString(resEntity);
 
-		System.out.println();
 		System.out.println("Response from server: " + stringXmlResponse);
 
-		System.out.printf("%nMensaje firmado: %s%n%n", signedRequest);
 		assertTrue(true);
 	}
 
@@ -121,10 +114,10 @@ public class VerifyRHTest {
 		Security.setProperty("ssl.SocketFactory.provider", "com.ibm.jsse2.SSLSocketFactoryImpl");
 		Security.setProperty("ssl.ServerSocketFactory.provider", "com.ibm.jsse2.SSLServerSocketFactoryImpl");
 
-		String trustStorePath = "resources/truststore_app_ext_cts_cis.jks";
-		String trustStorePassword = "changeit";
-		System.setProperty("javax.net.ssl.trustStore", trustStorePath);
-		System.setProperty("javax.net.ssl.trustStorePassword", trustStorePassword);
+		// String trustStorePath = "resources/truststore_app_ext_cts_cis.jks";
+		// String trustStorePassword = "changeit";
+		// System.setProperty("javax.net.ssl.trustStore", trustStorePath);
+		// System.setProperty("javax.net.ssl.trustStorePassword", trustStorePassword);
 
 		// System.setProperty("javax.net.ssl.trustStore",
 		// "cert/SRVSBAWB01-PROD2.jks");

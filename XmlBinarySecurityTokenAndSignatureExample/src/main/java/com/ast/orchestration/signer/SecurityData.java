@@ -12,8 +12,8 @@ public class SecurityData {
 	private String headerTimestampExpiration;
 	private String headerKeyInfo;
 
-	public SecurityData(String keystoreType, String keystorefilePath, String keystorePass, String alias, String aliasPass, String headerAction, 
-						String headerAddress, String headerTo, String headerTimestampExpiration, String headerKeyInfo) {
+	public SecurityData(String keystoreType, String keystorefilePath, String keystorePass, String alias, String aliasPass, String headerAction,
+			String headerAddress, String headerTo, String headerTimestampExpiration, String headerKeyInfo) {
 		this.keystoreType = keystoreType;
 		this.keystorefilePath = keystorefilePath;
 		this.keystorePass = keystorePass;
@@ -104,6 +104,13 @@ public class SecurityData {
 
 	public void setHeaderKeyInfo(String headerKeyInfo) {
 		this.headerKeyInfo = headerKeyInfo;
+	}
+
+	@Override
+	public String toString() {
+		return "SecurityData [keystoreType=" + keystoreType + ", keystorefilePath=" + keystorefilePath + ", keystorePass=" + keystorePass + ", alias=" + alias
+				+ ", aliasPass=" + aliasPass + ", headerAction=" + headerAction + ", headerAddress=" + headerAddress + ", headerTo=" + headerTo
+				+ ", headerTimestampExpiration=" + headerTimestampExpiration + ", headerKeyInfo=" + headerKeyInfo + "]";
 	}
 
 }

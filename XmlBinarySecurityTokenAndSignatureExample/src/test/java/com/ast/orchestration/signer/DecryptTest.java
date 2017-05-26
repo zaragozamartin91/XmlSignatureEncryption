@@ -11,6 +11,7 @@ import java.util.Properties;
 import org.apache.ws.security.WSSecurityException;
 import org.apache.ws.security.components.crypto.Crypto;
 import org.apache.ws.security.components.crypto.CryptoFactory;
+import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -21,6 +22,18 @@ import com.ast.orchestration.util.Constant;
 public class DecryptTest {
 	static SecurityData securityData;
 	static Crypto crypto;
+
+	int a = 5;
+	Integer b = a;
+	Integer c = 5;
+	int d = c;
+
+	@Test
+	public void testReferences() {
+		Assert.assertTrue(a == d);
+		Assert.assertTrue(b == c);
+		Assert.assertTrue(b == new Integer(5));
+	}
 
 	@BeforeClass
 	public static void beforeClass() throws IOException, WSSecurityException, URISyntaxException {
@@ -52,7 +65,7 @@ public class DecryptTest {
 
 	@Test
 	public void encryptKeys() throws DecryptEncryptException {
-		System.out.println("clave password encirptada:" + EncryptionUtils.encriptadorAES("password"));
+		System.out.println("\n\nclave password encirptada:" + EncryptionUtils.encriptadorAES("password"));
 	}
 
 	@Test

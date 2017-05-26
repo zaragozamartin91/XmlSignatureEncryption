@@ -26,7 +26,6 @@ import javax.xml.crypto.dsig.spec.C14NMethodParameterSpec;
 import javax.xml.crypto.dsig.spec.TransformParameterSpec;
 import javax.xml.namespace.QName;
 import javax.xml.soap.MessageFactory;
-import javax.xml.soap.SOAPBody;
 import javax.xml.soap.SOAPConstants;
 import javax.xml.soap.SOAPElement;
 import javax.xml.soap.SOAPEnvelope;
@@ -49,8 +48,6 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
 import com.ast.orchestration.aes.EncryptionUtils;
-import com.sun.jmx.snmp.Timestamp;
-import com.sun.org.apache.xml.internal.security.c14n.Canonicalizer;
 
 public class XMLSigner {
 	
@@ -71,7 +68,6 @@ public class XMLSigner {
 	private static final String ID_ELEMENT_TO = "_1";
 	private static final String ID_ELEMENT_TIMESTAMP = "_0";
 	
-	@SuppressWarnings({ "static-access", "restriction" })
 	public String sign(String request, SecurityData securityData) throws Exception {
 
 		
@@ -143,15 +139,18 @@ public class XMLSigner {
 		QName timestamp = soapEnvelope.createQName("Timestamp", WS_SECURITY_UTILITY_PREFIX);
 		SOAPElement timestampElement = securityElement.addChildElement(timestamp);
 		SimpleDateFormat timeFormat = new SimpleDateFormat(DATE_FORMAT);
-		Timestamp time = new Timestamp();
 		
+//		Timestamp time = new Timestamp();
 		// SECURITY-TIMESTAMP-CREATED
 		QName created = soapEnvelope.createQName("Created", WS_SECURITY_UTILITY_PREFIX);
 		SOAPElement createdElement = timestampElement.addChildElement(created);	
 
+		// SE SUMAN DIEZ MINUTOS PARA PROBAR ALGO EN EL .215 SOLO FUNCIONARA ALLI
+//		int minutes = 10;
+		
 		Calendar calendarCreated = Calendar.getInstance();
-		calendarCreated.setTime(time.getDate());
 		calendarCreated.add(Calendar.HOUR_OF_DAY, 3);
+//		calendarCreated.add(Calendar.MINUTE, minutes);
 		String date = timeFormat.format(calendarCreated.getTime());
 //		timeFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
 		createdElement.addTextNode(date);
@@ -162,9 +161,9 @@ public class XMLSigner {
 		SOAPElement expiresElement = timestampElement.addChildElement(expires);
 		
 		Calendar calendarExpires = Calendar.getInstance();
-		calendarExpires.setTime(time.getDate());
 		calendarExpires.add(Calendar.HOUR_OF_DAY, 3);
 		calendarExpires.add(Calendar.MINUTE, Integer.parseInt(securityData.getHeaderTimestampExpiration()));
+//		calendarExpires.add(Calendar.MINUTE, minutes);
 		String expiredTime = timeFormat.format(calendarExpires.getTime());
 //		timeFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
 		expiresElement.addTextNode(expiredTime);
@@ -191,7 +190,7 @@ public class XMLSigner {
 
 		// SECURITY-SIGNATURE-KEY INFO
 		KeyInfo keyInfo = null;
-		XMLSignature signer = sigFactory.getInstance().newXMLSignature(signedInfo, keyInfo);
+		XMLSignature signer = XMLSignatureFactory.getInstance().newXMLSignature(signedInfo, keyInfo);
 		signer.sign(signerContext);
 
 		// RKEY = BinarySecurityToken y Key Info referenciando a BinarySecurityToken 
@@ -210,7 +209,6 @@ public class XMLSigner {
 		return strResult;
 	}
 
-	@SuppressWarnings("restriction")
 	private String soapPartToString(SOAPPart soapPart) throws SOAPException, TransformerFactoryConfigurationError,
 			TransformerConfigurationException, TransformerException {
 		Source source = soapPart.getContent();
@@ -235,7 +233,6 @@ public class XMLSigner {
 	
 	/** Retorna un objeto Element correspondiente al BinarySecurityToken **/
 	
-	@SuppressWarnings("restriction")
 	private SOAPElement getBinarySecurityToken(SecurityData securityData, SOAPEnvelope soapEnvelope, 
 					 SOAPHeaderElement securityElement,String binaryTokenId, KeyStore keyStore) throws Exception {
 		QName binarySecurityToken = soapEnvelope.createQName("BinarySecurityToken", WS_SECURITY_PREFIX);
@@ -252,11 +249,10 @@ public class XMLSigner {
 	/** Retorna un objeto SignedInfo con los elementos TImestamp y To firmados mendiante
   	Signature Algorithm, Signature Canonicalization y Digest Algorithm **/
 
-	@SuppressWarnings("restriction")
 	private SignedInfo getSignedInfo(XMLSignatureFactory signFactory) throws Exception { 
 		TransformParameterSpec transformSpec = null;
 		List<Transform> transforms = new LinkedList<Transform>();
-		Transform envTransform = signFactory.newTransform(Canonicalizer.ALGO_ID_C14N_EXCL_OMIT_COMMENTS, transformSpec);
+		Transform envTransform = signFactory.newTransform("http://www.w3.org/2001/10/xml-exc-c14n#", transformSpec);
 		transforms.add(envTransform);
 		Reference referenceTimestamp = signFactory.newReference("#"+ID_ELEMENT_TIMESTAMP, signFactory.newDigestMethod(DigestMethod.SHA1, null), transforms, null, null);
 		Reference referenceTo = signFactory.newReference("#"+ID_ELEMENT_TO, signFactory.newDigestMethod(DigestMethod.SHA1, null), transforms, null, null);
@@ -273,14 +269,12 @@ public class XMLSigner {
 	
 	/** Agrega un objeto Element correspondiente al Key Info **/
 	
-	@SuppressWarnings("restriction")
 	private void addKeyInfoBST(SOAPEnvelope soapEnvelope, SOAPHeader soapHeader, String binaryTokenId) throws Exception {
 		addKeyInfoBST(soapEnvelope,soapHeader,binaryTokenId,null);
 	}
 	
 	/** Agrega un objeto Element correspondiente al Key Info **/
 	
-	@SuppressWarnings("restriction")
 	private void addKeyInfoBST(SOAPEnvelope soapEnvelope, SOAPHeader soapHeader, String binaryTokenId, X509Certificate certificate) throws Exception {
 		Node node = getSignatureValue(soapHeader);
 		SOAPElement signatureElement = (SOAPElement) node;
