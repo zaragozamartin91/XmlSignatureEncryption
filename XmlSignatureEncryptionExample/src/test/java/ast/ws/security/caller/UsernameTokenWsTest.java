@@ -1,4 +1,4 @@
-package ast.ws.security.caller.util;
+package ast.ws.security.caller;
 
 import ast.ws.security.caller.doc.AstSoapDocument;
 import ast.ws.security.util.DocumentUtils;

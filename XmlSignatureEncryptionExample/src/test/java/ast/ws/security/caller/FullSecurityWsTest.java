@@ -36,11 +36,11 @@ import ast.ws.security.caller.injector.timestamp.TimestampInjector;
 import ast.ws.security.util.DocumentUtils;
 import ast.ws.security.decoder.WsSecurityMessageDecoder;
 
-public class WsSecurityServiceCaller {
+public class FullSecurityWsTest {
 	private Crypto crypto;
 	private String stringXmlResponse;
 
-	public WsSecurityServiceCaller() {
+	public FullSecurityWsTest() {
 		crypto = CryptoBuilder.build().fromProperties("crypto.properties");
 	}
 
@@ -175,10 +175,10 @@ public class WsSecurityServiceCaller {
 
 	public static void main(String[] args) {
 		try {
-			WsSecurityServiceCaller wsSecurityServiceCaller = new WsSecurityServiceCaller();
-			wsSecurityServiceCaller.run();
+			FullSecurityWsTest fullSecurityWsTest = new FullSecurityWsTest();
+			fullSecurityWsTest.run();
 
-			WsSecurityMessageDecoder wsSecurityMessageDecoder = new WsSecurityMessageDecoder(wsSecurityServiceCaller.getStringXmlResponse());
+			WsSecurityMessageDecoder wsSecurityMessageDecoder = new WsSecurityMessageDecoder(fullSecurityWsTest.getStringXmlResponse());
 			wsSecurityMessageDecoder.run();
 		} catch (Exception e) {
 			e.printStackTrace();
