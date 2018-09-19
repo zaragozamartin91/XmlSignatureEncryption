@@ -181,7 +181,7 @@ public class XMLSigner {
 
 		// SECURITY-SIGNATURE-SIGNED INFO
 		SignedInfo signedInfo = getSignedInfo(sigFactory);
-		PrivateKey privateKey = (PrivateKey) keyStore.getKey(securityData.getAlias(), EncryptionUtils.desencriptadorAES(securityData.getAliasPass()).toCharArray());
+		PrivateKey privateKey = (PrivateKey) keyStore.getKey(securityData.getAlias(), EncryptionUtils.decryptAes(securityData.getAliasPass()).toCharArray());
 		
 		DOMSignContext signerContext = new DOMSignContext(privateKey, securityElement);
 		signerContext.putNamespacePrefix(XMLSignature.XMLNS, "");
@@ -226,7 +226,7 @@ public class XMLSigner {
 	private KeyStore getKeystore(SecurityData securityData) throws Exception { 
 		FileInputStream input = new FileInputStream(securityData.getKeystorefilePath());
 	    KeyStore keyStore = KeyStore.getInstance(securityData.getKeystoreType());
-	    keyStore.load(input, EncryptionUtils.desencriptadorAES(securityData.getKeystorePass()).toCharArray());
+	    keyStore.load(input, EncryptionUtils.decryptAes(securityData.getKeystorePass()).toCharArray());
 	    input.close();	    
 	    return keyStore;
 	}	
@@ -251,9 +251,11 @@ public class XMLSigner {
 
 	private SignedInfo getSignedInfo(XMLSignatureFactory signFactory) throws Exception { 
 		TransformParameterSpec transformSpec = null;
-		List<Transform> transforms = new LinkedList<Transform>();
 		Transform envTransform = signFactory.newTransform("http://www.w3.org/2001/10/xml-exc-c14n#", transformSpec);
+
+		List<Transform> transforms = new LinkedList<Transform>();
 		transforms.add(envTransform);
+		
 		Reference referenceTimestamp = signFactory.newReference("#"+ID_ELEMENT_TIMESTAMP, signFactory.newDigestMethod(DigestMethod.SHA1, null), transforms, null, null);
 		Reference referenceTo = signFactory.newReference("#"+ID_ELEMENT_TO, signFactory.newDigestMethod(DigestMethod.SHA1, null), transforms, null, null);
 		

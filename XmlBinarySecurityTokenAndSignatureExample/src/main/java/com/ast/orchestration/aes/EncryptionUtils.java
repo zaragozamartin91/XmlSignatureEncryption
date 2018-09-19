@@ -1,7 +1,7 @@
 package com.ast.orchestration.aes;
 
 public class EncryptionUtils {
-	public static String desencriptadorAES(String claveEncriptada) throws DecryptEncryptException {
+	public static String decryptAes(String claveEncriptada) throws DecryptEncryptException {
 		String desencriptado = "";
 		try {
 			AESKey aesKey = new AESKey();

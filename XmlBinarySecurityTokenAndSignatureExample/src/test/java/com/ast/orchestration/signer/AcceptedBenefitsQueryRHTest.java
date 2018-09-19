@@ -62,8 +62,8 @@ public class AcceptedBenefitsQueryRHTest {
 				sigbabanelcoProperties.getProperty(Constant.ORCHESTRATION_HEADER_TIMESTAMP_EXPIRATION),
 				sigbabanelcoProperties.getProperty(Constant.ORCHESTRATION_HEADER_KEY_INFO));
 
-	//macro-02.jks certificado	
-		//para firmar el msj qe va
+		// macro-02.jks certificado
+		// para firmar el msj qe va
 		System.out.println("seguridad: " + securityData);
 
 		System.out.println("file.encoding:" + System.getProperty("file.encoding"));
@@ -91,15 +91,15 @@ public class AcceptedBenefitsQueryRHTest {
 	public void signAndSend() throws Exception {
 		System.out.println("signAndSend:");
 		XMLSigner xmlSigner = new XMLSigner();
-		
-		//trama sin firmar
+
+		// trama sin firmar
 		String request = "<s:Envelope xmlns:s=\"http://www.w3.org/2003/05/soap-envelope\" xmlns:wss=\"https://wssba.prismamp.com\" xmlns:ent=\"https://wssba.prismamp.com/entities\" xmlns:a=\"http://www.w3.org/2005/08/addressing\" xmlns:u=\"http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd\" xmlns:o=\"http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd\"><s:Header/><s:Body><wss:AcceptedBenefitsQueryRH><wss:request xmlns:i=\"http://www.w3.org/2001/XMLSchema-instance\"><ent:Document><ent:DocumentNumber>6</ent:DocumentNumber><ent:Nationality>7</ent:Nationality><ent:TypeId>8</ent:TypeId></ent:Document><ent:Request><ent:Entity>2</ent:Entity><ent:Metadata><ent:MetadataDto><ent:Name>3</ent:Name><ent:Value>4</ent:Value></ent:MetadataDto></ent:Metadata><ent:Terminal>5</ent:Terminal></ent:Request><ent:NroBeneficio>1</ent:NroBeneficio></wss:request></wss:AcceptedBenefitsQueryRH></s:Body></s:Envelope>";
-		
+
 		String signedRequest = xmlSigner.sign(request, securityData);
-		String endpointWS = "https://200.59.131.174/NetworkService/Service.svc?wsdl"; // URL DE PRODUCCION
-//		String endpointWS = "https://200.59.131.173/NetworkService/Service.svc?wsdl"; // URL DE CERTIFICACION
+//		String endpointWS = "https://200.59.131.174/NetworkService/Service.svc?wsdl"; // URL DE PRODUCCION
+		// String endpointWS = "https://200.59.131.173/NetworkService/Service.svc?wsdl"; // URL DE CERTIFICACION
 		// String endpointWS = "https://200.59.131.174/NetworkService/Service.svc?singleWsdl"; // IP DE PRODUCCION
-		// String endpointWS = "https://172.18.22.37/networkservice/service.svc?wsdl"; // IP DATAPOWER SSL
+		 String endpointWS = "https://172.18.22.37/networkservice/service.svc?wsdl"; // IP DATAPOWER SSL
 
 		send(signedRequest, endpointWS);
 	}
@@ -108,7 +108,7 @@ public class AcceptedBenefitsQueryRHTest {
 	public void justSend() throws Exception {
 		System.out.println("justSend:");
 		/* MANDA UN MENSAJE CON EL TIMESTAMP VENCIDO */
-		String signedRequest = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><s:Envelope xmlns:s=\"http://www.w3.org/2003/05/soap-envelope\" xmlns:wss=\"https://wssba.prismamp.com\" xmlns:ent=\"https://wssba.prismamp.com/entities\" xmlns:a=\"http://www.w3.org/2005/08/addressing\" xmlns:u=\"http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd\" xmlns:o=\"http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd\"><s:Header><a:Action>https://wssba.prismamp.com/INetworkService/GetAgreementRH</a:Action><a:MessageID>urn:uuid:c2312e0c-35a5-47df-a11b-d2df32e46c35</a:MessageID><a:ReplyTo><a:Address>http://www.w3.org/2005/08/addressing/anonymous</a:Address></a:ReplyTo><a:To u:Id=\"_1\">https://wssba.prismamp.com/NetworkService/Service.svc</a:To><o:Security s:mustUnderstand=\"1\"><u:Timestamp u:Id=\"_0\"><u:Created>2017-05-24T14:56:52.052Z</u:Created><u:Expires>2017-05-24T15:01:52.052Z</u:Expires></u:Timestamp><o:BinarySecurityToken EncodingType=\"http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-soap-message-security-1.0#Base64Binary\" ValueType=\"http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-x509-token-profile-1.0#X509v3\" u:Id=\"uuid:9bfaa06f-97a7-46b4-9e77-84500c7ebbc6\">MIICFDCCAYGgAwIBAgIQB0A5MI1Tu5FMl4Szb4BgJDAJBgUrDgMCHQUAMCExHzAdBgNVBAMTFlByaXNtYVNiYVRlc3RpbmdSb290Q0EwHhcNMTUwNTIyMTMyMjQ3WhcNMzkxMjMxMjM1OTU5WjAgMR4wHAYDVQQDExV3c3NiYWNlci5wcmlzbWFtcC5jb20wgZ8wDQYJKoZIhvcNAQEBBQADgY0AMIGJAoGBAMKtAVI7eN+ClEO5FByQckYfAUnoLmN3M6sjHGbMz9wx1/hUhto2P9yXarkbJavGH5dlh0xL24C345//qQ72DqNv0jq3FrRWJjrcPtbWgMBuwEDXo+2NeDzr2WbCdHnJSjvRJpZj7F08cKnvGq/qwWR5VFptdT+Y0i2WBuF22TnTAgMBAAGjVjBUMFIGA1UdAQRLMEmAEKPZTKfOJF2t4EXAE7RCbbGhIzAhMR8wHQYDVQQDExZQcmlzbWFTYmFUZXN0aW5nUm9vdENBghBcDUs87GMErEQHfnd+eAOZMAkGBSsOAwIdBQADgYEADzvM2eXf/NJrndDr/TghKC6tdpXNSwQ4WTMpv+sS6BUv1TfGTW+RUiEWpTbEODzb8Q8Ti42HXX/c3czOAVxbbAv2n4oFBCIll+rXbSuKgTTF6SOgNzqJCzd0+0lMysI+MWd0ej1qvLkudq4oRiGJHcJ7iupUx56hkyJugDnAvmY=</o:BinarySecurityToken><Signature xmlns=\"http://www.w3.org/2000/09/xmldsig#\"><SignedInfo><CanonicalizationMethod Algorithm=\"http://www.w3.org/2001/10/xml-exc-c14n#\"/><SignatureMethod Algorithm=\"http://www.w3.org/2000/09/xmldsig#rsa-sha1\"/><Reference URI=\"#_0\"><Transforms><Transform Algorithm=\"http://www.w3.org/2001/10/xml-exc-c14n#\"/></Transforms><DigestMethod Algorithm=\"http://www.w3.org/2000/09/xmldsig#sha1\"/><DigestValue>GiQQ2ziysfdGVfTwCJGzcGQUWH8=</DigestValue></Reference><Reference URI=\"#_1\"><Transforms><Transform Algorithm=\"http://www.w3.org/2001/10/xml-exc-c14n#\"/></Transforms><DigestMethod Algorithm=\"http://www.w3.org/2000/09/xmldsig#sha1\"/><DigestValue>8X9cZFtQRXZnhwx5Fzt9r2pkxvg=</DigestValue></Reference></SignedInfo><SignatureValue>ifUZ047GyaiGQibrxq3vRsnvcq8paw10A/q8oAnhkFyYJQdWJqK/J1LFl+CHoq1JOyOd46ng/wjLZ7WRWv6GU/zohLKxCArJ2uE/gqKXHsgTMhNRpo48GL+SfLk0OOPTYj5SYBte5Wyt1AVOugMhbu+IKegm1VXvF/AlUFr6W7w=</SignatureValue><KeyInfo><o:SecurityTokenReference><o:Reference URI=\"#uuid:9bfaa06f-97a7-46b4-9e77-84500c7ebbc6\" ValueType=\"http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-x509-token-profile-1.0#X509v3\"/></o:SecurityTokenReference></KeyInfo></Signature></o:Security></s:Header><s:Body><wss:GetAgreementRH><wss:request xmlns:i=\"http://www.w3.org/2001/XMLSchema-instance\"> <ent:Document><ent:DocumentNumber>6</ent:DocumentNumber> <ent:Nationality>7</ent:Nationality> <ent:TypeId>8</ent:TypeId></ent:Document> <ent:NroBeneficio>1</ent:NroBeneficio>  <ent:Request><ent:Entity>2</ent:Entity> <ent:Metadata><ent:MetadataDto><ent:Name>3</ent:Name><ent:Value>4</ent:Value></ent:MetadataDto></ent:Metadata> <ent:Terminal>5</ent:Terminal></ent:Request></wss:request></wss:GetAgreementRH></s:Body></s:Envelope>";
+		String signedRequest = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?><s:Envelope xmlns:s=\"http://www.w3.org/2003/05/soap-envelope\" xmlns:a=\"http://www.w3.org/2005/08/addressing\" xmlns:ent=\"https://wssba.prismamp.com/entities\" xmlns:o=\"http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd\" xmlns:u=\"http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd\" xmlns:wss=\"https://wssba.prismamp.com\"><s:Header><a:Action s:mustUnderstand=\"1\">https://wssba.prismamp.com/INetworkService/AcceptedBenefitsQueryRH</a:Action><a:MessageID>urn:uuid:420f84df-4cdb-42bd-aec3-5def84c03314</a:MessageID><a:ReplyTo><a:Address>http://www.w3.org/2005/08/addressing/anonymous</a:Address></a:ReplyTo><a:To s:mustUnderstand=\"1\" u:Id=\"_1\">https://wssba.prismamp.com/NetworkService/Service.svc</a:To><o:Security s:mustUnderstand=\"1\"><u:Timestamp u:Id=\"_0\"><u:Created>2017-05-29T13:23:02.002Z</u:Created><u:Expires>2017-05-29T13:53:02.002Z</u:Expires></u:Timestamp><o:BinarySecurityToken EncodingType=\"http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-soap-message-security-1.0#Base64Binary\" ValueType=\"http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-x509-token-profile-1.0#X509v3\" u:Id=\"uuid:fdbbf076-14c3-47d8-af1d-cf168be67120\">MIICFDCCAYGgAwIBAgIQB0A5MI1Tu5FMl4Szb4BgJDAJBgUrDgMCHQUAMCExHzAdBgNVBAMTFlByaXNtYVNiYVRlc3RpbmdSb290Q0EwHhcNMTUwNTIyMTMyMjQ3WhcNMzkxMjMxMjM1OTU5WjAgMR4wHAYDVQQDExV3c3NiYWNlci5wcmlzbWFtcC5jb20wgZ8wDQYJKoZIhvcNAQEBBQADgY0AMIGJAoGBAMKtAVI7eN+ClEO5FByQckYfAUnoLmN3M6sjHGbMz9wx1/hUhto2P9yXarkbJavGH5dlh0xL24C345//qQ72DqNv0jq3FrRWJjrcPtbWgMBuwEDXo+2NeDzr2WbCdHnJSjvRJpZj7F08cKnvGq/qwWR5VFptdT+Y0i2WBuF22TnTAgMBAAGjVjBUMFIGA1UdAQRLMEmAEKPZTKfOJF2t4EXAE7RCbbGhIzAhMR8wHQYDVQQDExZQcmlzbWFTYmFUZXN0aW5nUm9vdENBghBcDUs87GMErEQHfnd+eAOZMAkGBSsOAwIdBQADgYEADzvM2eXf/NJrndDr/TghKC6tdpXNSwQ4WTMpv+sS6BUv1TfGTW+RUiEWpTbEODzb8Q8Ti42HXX/c3czOAVxbbAv2n4oFBCIll+rXbSuKgTTF6SOgNzqJCzd0+0lMysI+MWd0ej1qvLkudq4oRiGJHcJ7iupUx56hkyJugDnAvmY=</o:BinarySecurityToken><Signature xmlns=\"http://www.w3.org/2000/09/xmldsig#\"><SignedInfo><CanonicalizationMethod Algorithm=\"http://www.w3.org/2001/10/xml-exc-c14n#\"/><SignatureMethod Algorithm=\"http://www.w3.org/2000/09/xmldsig#rsa-sha1\"/><Reference URI=\"#_0\"><Transforms><Transform Algorithm=\"http://www.w3.org/2001/10/xml-exc-c14n#\"/></Transforms><DigestMethod Algorithm=\"http://www.w3.org/2000/09/xmldsig#sha1\"/><DigestValue>3nnpfvvNN2ZBBig1aXUn7DJ2lyQ=</DigestValue></Reference><Reference URI=\"#_1\"><Transforms><Transform Algorithm=\"http://www.w3.org/2001/10/xml-exc-c14n#\"/></Transforms><DigestMethod Algorithm=\"http://www.w3.org/2000/09/xmldsig#sha1\"/><DigestValue>8mVINgpquZachbFLFkUuAKHBkN8=</DigestValue></Reference></SignedInfo><SignatureValue>PNtsL2V1Aw1sxKO3SOZXBwgrAWlau1PEWqJ5sBp7gD4tDFl6fiMLiIuUeODfFeRzwaP6rSKXk1Ic/sYs1IQX206xKxFKPQYTg2SGvaq/YRrJBisaeQ6yrYKX2k+YtiHkN75NKNxW8txKYExrQ18gdJw7af1CylL0Z+HCok3OVf4=</SignatureValue><KeyInfo><o:SecurityTokenReference><o:Reference URI=\"#uuid:fdbbf076-14c3-47d8-af1d-cf168be67120\" ValueType=\"http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-x509-token-profile-1.0#X509v3\"/></o:SecurityTokenReference></KeyInfo></Signature></o:Security></s:Header><s:Body><wss:AcceptedBenefitsQueryRH><wss:request xmlns:i=\"http://www.w3.org/2001/XMLSchema-instance\"><ent:Document><ent:DocumentNumber>6</ent:DocumentNumber><ent:Nationality>7</ent:Nationality><ent:TypeId>8</ent:TypeId></ent:Document><ent:Request><ent:Entity>2</ent:Entity><ent:Metadata><ent:MetadataDto><ent:Name>3</ent:Name><ent:Value>4</ent:Value></ent:MetadataDto></ent:Metadata><ent:Terminal>5</ent:Terminal></ent:Request><ent:NroBeneficio>1</ent:NroBeneficio></wss:request></wss:AcceptedBenefitsQueryRH></s:Body></s:Envelope>";
 		String endpointWS = "https://200.59.131.174/NetworkService/Service.svc?wsdl"; // URL DE PRODUCCION
 
 		send(signedRequest, endpointWS);
@@ -148,14 +148,14 @@ public class AcceptedBenefitsQueryRHTest {
 		Security.setProperty("ssl.SocketFactory.provider", "com.ibm.jsse2.SSLSocketFactoryImpl");
 		Security.setProperty("ssl.ServerSocketFactory.provider", "com.ibm.jsse2.SSLServerSocketFactoryImpl");
 
-		 String trustStorePath = "resources/SRVSBAWB01-PROD2.jks";
-		 String trustStorePassword = "macro";
+		String trustStorePath = "resources/SRVSBAWB01-PROD2.jks";
+		String trustStorePassword = "macro";
 
 		// String trustStorePath = "resources/macro02-test.jks";
 		// String trustStorePassword = "macro02";
 
-		 System.setProperty("javax.net.ssl.trustStore", trustStorePath);
-		 System.setProperty("javax.net.ssl.trustStorePassword", trustStorePassword);
+		System.setProperty("javax.net.ssl.trustStore", trustStorePath);
+		System.setProperty("javax.net.ssl.trustStorePassword", trustStorePassword);
 
 		SSLContext ctx = SSLContext.getInstance("TLS");
 		X509TrustManager tm = new X509TrustManager() {

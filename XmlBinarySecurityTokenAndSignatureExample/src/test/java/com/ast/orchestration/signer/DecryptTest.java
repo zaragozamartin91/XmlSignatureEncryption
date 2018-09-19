@@ -32,7 +32,7 @@ public class DecryptTest {
 	public void testReferences() {
 		Assert.assertTrue(a == d);
 		Assert.assertTrue(b == c);
-		Assert.assertTrue(b == new Integer(5));
+		Assert.assertFalse(b == new Integer(5));
 	}
 
 	@BeforeClass
@@ -54,12 +54,12 @@ public class DecryptTest {
 
 	@Test
 	public void decryptKeys() throws DecryptEncryptException {
-		System.out.printf("Storepass de %s es: %s%n", "SRVSBAWB01-PROD2.jks", EncryptionUtils.desencriptadorAES("00f00e462d997f905a1da5266438eba4"));
+		System.out.printf("Storepass de %s es: %s%n", "SRVSBAWB01-PROD2.jks", EncryptionUtils.decryptAes("00f00e462d997f905a1da5266438eba4"));
 		System.out.printf("Keypass de %s::%s es: %s%n", "SRVSBAWB01-PROD2.jks", "srvsbawb01-prod",
-				EncryptionUtils.desencriptadorAES("1930ea1a50e29506ea9cdc204e228fd5"));
-		System.out.printf("Storepass de %s es: %s%n", "macro02-test.jks", EncryptionUtils.desencriptadorAES("27cf4c44eab0c8a33466ae8b7dcd04f0"));
+				EncryptionUtils.decryptAes("1930ea1a50e29506ea9cdc204e228fd5"));
+		System.out.printf("Storepass de %s es: %s%n", "macro02-test.jks", EncryptionUtils.decryptAes("27cf4c44eab0c8a33466ae8b7dcd04f0"));
 		System.out.printf("Keypass de %s::%s es: %s%n", "macro02-test.jks", "macro-test",
-				EncryptionUtils.desencriptadorAES("27cf4c44eab0c8a33466ae8b7dcd04f0"));
+				EncryptionUtils.decryptAes("27cf4c44eab0c8a33466ae8b7dcd04f0"));
 
 	}
 
@@ -78,7 +78,7 @@ public class DecryptTest {
 	private KeyStore getKeystore() throws Exception {
 		FileInputStream input = new FileInputStream(securityData.getKeystorefilePath());
 		KeyStore keyStore = KeyStore.getInstance(securityData.getKeystoreType());
-		keyStore.load(input, EncryptionUtils.desencriptadorAES(securityData.getKeystorePass()).toCharArray());
+		keyStore.load(input, EncryptionUtils.decryptAes(securityData.getKeystorePass()).toCharArray());
 		input.close();
 		return keyStore;
 	}
