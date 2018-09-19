@@ -11,6 +11,7 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactoryConfigurationError;
 
 import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -59,7 +60,7 @@ public class DocumentUtils {
 
 	/**
 	 * Obtiene el valor de un atributo dentro de un documento.
-	 * 
+	 *
 	 * @param document
 	 *            - Documento a analizar.
 	 * @param nodeName
@@ -82,7 +83,7 @@ public class DocumentUtils {
 
 	/**
 	 * Obtiene el valor de un atributo dentro de un documento o retorna un valor por defecto en caso de no encontrarlo.
-	 * 
+	 *
 	 * @param document
 	 *            - Documento a analizar.
 	 * @param nodeName
@@ -113,6 +114,10 @@ public class DocumentUtils {
 		Node attribute = nodeList.item(nodeIndex).getAttributes().getNamedItem(attributeName);
 		attribute.setTextContent(value);
 		return attribute.getNodeValue();
+	}
+
+	public static Element createElementNs(Document doc, String namespaceUri, String prefix, String tagName) {
+		return doc.createElementNS(namespaceUri , prefix + ":" + tagName);
 	}
 
 	public static void main(String[] args) {
